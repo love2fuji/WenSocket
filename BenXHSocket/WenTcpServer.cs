@@ -51,7 +51,7 @@ namespace WenSocket
         /// <summary>
         /// 初始化消息
         /// </summary>
-        private string InitMsg = "JiYF笨小孩TCP服务端";
+        private string InitMsg = "Welcome To FujiServer, Connect To Network OK!";
 
         /// <summary>
         /// 监听的端口

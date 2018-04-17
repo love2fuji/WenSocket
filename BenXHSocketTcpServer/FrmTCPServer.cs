@@ -15,7 +15,8 @@ namespace WenSocketTcpServer
 {
     public partial class FrmTCPServer : Form
     {
-        private static string serverIP;
+        //private static string serverIP;
+        IPAddress serverIP = IPAddress.Any;
         private static int port;
         object obj = new object();
         private int sendInt = 0;
@@ -24,8 +25,9 @@ namespace WenSocketTcpServer
         public FrmTCPServer()
         {
             InitializeComponent();
-            
-            serverIP = ConfigurationManager.AppSettings["ServerIP"];
+
+            //serverIP = ConfigurationManager.AppSettings["ServerIP"];
+            IPAddress serverIP = IPAddress.Any;
             port = int.Parse(ConfigurationManager.AppSettings["ServerPort"]);
             Control.CheckForIllegalCrossThreadCalls = false;
             init();
@@ -97,9 +99,9 @@ namespace WenSocketTcpServer
         {
             try
             {
-                if (serverIP != null && serverIP != "" && port > 0)
+                if (serverIP != null && port > 0)
                 {
-                    tcpServer.InitSocket(IPAddress.Parse(serverIP), port);
+                    tcpServer.InitSocket(serverIP, port);
                     tcpServer.Start();
                     listBoxServerInfo.Items.Add(string.Format("{0}服务端程序监听启动成功！监听：{1}:{2}",DateTime.Now.ToString(), serverIP, port.ToString()));
                     StartServerToolStripMenuItem.Enabled = false;
@@ -216,9 +218,9 @@ namespace WenSocketTcpServer
                             string str = Encoding.ASCII.GetString(buffer);
                             //将接收到客户端的数据重新发送给客户端
                             string SendStr = "TCPServers at [" + DateTime.Now.ToString("yyy-MM-dd HH:mm:ss") + "] Received your Data:" + str;
-                            tcpServer.SendToClient(sks.Ip, str);
+                            tcpServer.SendToClient(sks.Ip, SendStr);
 
-                            listBox1.Items.Add(string.Format("{0}客户端{1}发来消息：{2}",DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
+                            listBox1.Items.Add(string.Format("{0}客户端 {1} 发来消息：{2}",DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
                         }
                     }
                 }
