@@ -3,11 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27428.2005
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocket", "BenXHSocket\WenSocket.csproj", "{1924EB2E-5E39-4272-B652-5670B018627A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocket", "WenSocket\WenSocket.csproj", "{1924EB2E-5E39-4272-B652-5670B018627A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocketTcpServer", "BenXHSocketTcpServer\WenSocketTcpServer.csproj", "{4EDA59FC-CBF8-40DA-BFAE-3A5DE34E6907}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocketTcpServer", "WenSocketTcpServer\WenSocketTcpServer.csproj", "{4EDA59FC-CBF8-40DA-BFAE-3A5DE34E6907}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocketClient", "BenXHSocketClient\WenSocketClient.csproj", "{7034B8B1-B1C1-4C55-AD3E-B7CA8C20CF12}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WenSocketClient", "WenSocketClient\WenSocketClient.csproj", "{7034B8B1-B1C1-4C55-AD3E-B7CA8C20CF12}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
