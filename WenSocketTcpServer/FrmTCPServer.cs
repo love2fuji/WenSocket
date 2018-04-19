@@ -10,6 +10,7 @@ using System.Configuration;
 using System.Net;
 using WenSocket;
 using System.Threading;
+using WenSocketTcpServer.Common;
 
 namespace WenSocketTcpServer
 {
@@ -17,6 +18,8 @@ namespace WenSocketTcpServer
     {
         //private static string serverIP;
         IPAddress serverIP = IPAddress.Any;
+        //private static log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         private static int port;
         object obj = new object();
         private int sendInt = 0;
@@ -35,6 +38,7 @@ namespace WenSocketTcpServer
 
         private void init()
         {
+            LogHelper.log.Info("启动软件。。。");
             treeViewClientList.Nodes.Clear();
             TreeNode tn = new TreeNode();
             tn.Name = "ClientList";
@@ -88,7 +92,7 @@ namespace WenSocketTcpServer
                 }
             }
 
-        }  
+        }
 
         /// <summary>
         /// 开启服务
@@ -103,15 +107,17 @@ namespace WenSocketTcpServer
                 {
                     tcpServer.InitSocket(serverIP, port);
                     tcpServer.Start();
-                    listBoxServerInfo.Items.Insert(0, string.Format("{0}服务端程序监听启动成功！监听：{1}:{2}",DateTime.Now.ToString(), serverIP, port.ToString()));
+                    LogHelper.log.Info(string.Format("{0}服务端程序监听启动成功！监听：{1}:{2}", DateTime.Now.ToString(), serverIP, port.ToString()));
+                    listBoxServerInfo.Items.Insert(0, string.Format("{0}服务端程序监听启动成功！监听：{1}:{2}", DateTime.Now.ToString(), serverIP, port.ToString()));
                     StartServerToolStripMenuItem.Enabled = false;
                 }
 
-                
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                listBoxServerInfo.Items.Insert(0, string.Format("服务器启动失败！原因：{0}",ex.Message));
+                LogHelper.log.Info(string.Format("服务器启动失败！原因：{0}", ex.Message));
+                listBoxServerInfo.Items.Insert(0, string.Format("服务器启动失败！原因：{0}", ex.Message));
                 StartServerToolStripMenuItem.Enabled = true;
             }
         }
@@ -126,13 +132,17 @@ namespace WenSocketTcpServer
             //tcpServer.Stop();
             //listBoxServerInfo.Items.Insert("服务器程序停止成功！");
             //StartServerToolStripMenuItem.Enabled = true;
-           
+
         }
 
         private void FrmTCPServer_Load(object sender, EventArgs e)
         {
-            if(tcpServer ==null)
-            listBoxServerInfo.Items.Insert(0, string.Format("服务端监听程序尚未开启！{0}:{1}",serverIP,port));
+            if (tcpServer == null)
+            {
+                LogHelper.log.Info(string.Format("服务端监听程序尚未开启！{0}:{1}", serverIP, port));
+                listBoxServerInfo.Items.Insert(0, string.Format("服务端监听程序尚未开启！{0}:{1}", serverIP, port));
+            }
+
             treeViewClientList.ExpandAll();
             WenTcpServer.pushSockets = new PushSockets(Rev);
             tcpServer = new WenTcpServer();
@@ -150,15 +160,16 @@ namespace WenSocketTcpServer
                 delegate
                 {
                     if (treeViewClientList.Nodes[0] != null)
-                    { 
-                        
+                    {
+
                     }
 
                     if (sks.ex != null)
                     {
                         if (sks.ClientDispose)
                         {
-                            listBoxServerInfo.Items.Insert(0, string.Format("{0}客户端：{1}下线！",DateTime.Now.ToString(), sks.Ip));
+                            LogHelper.log.Info(string.Format("{0}客户端：{1}下线！", DateTime.Now.ToString(), sks.Ip));
+                            listBoxServerInfo.Items.Insert(0, string.Format("{0}客户端：{1}下线！", DateTime.Now.ToString(), sks.Ip));
                             if (treeViewClientList.Nodes[0].Nodes.ContainsKey(sks.Ip.ToString()))
                             {
                                 if (DicTreeIPEndPoint.Count != 0)
@@ -167,10 +178,10 @@ namespace WenSocketTcpServer
                                     treeViewClientList.Nodes[0].Nodes.RemoveByKey(sks.Ip.ToString());
 
                                     toolStripStatusLabelClientNum.Text = (int.Parse(toolStripStatusLabelClientNum.Text) - 1).ToString();//treeViewClientList.Nodes[0].Nodes.Count.ToString();
-                           
+
                                 }
-                               
-                               }
+
+                            }
                         }
                         listBoxServerInfo.Items.Insert(0, sks.ex.Message);
                     }
@@ -178,8 +189,9 @@ namespace WenSocketTcpServer
                     {
                         if (sks.NewClientFlag)
                         {
-                            listBoxServerInfo.Items.Insert(0, string.Format("{0}新的客户端：{1}链接成功",DateTime.Now.ToString(), sks.Ip));
-                            
+                            LogHelper.log.Info(string.Format("{0}新的客户端：{1}链接成功", DateTime.Now.ToString(), sks.Ip));
+                            listBoxServerInfo.Items.Insert(0, string.Format("{0}新的客户端：{1}链接成功", DateTime.Now.ToString(), sks.Ip));
+
                             TreeNode tn = new TreeNode();
                             tn.Name = sks.Ip.ToString();
                             tn.Text = sks.Ip.ToString();
@@ -190,26 +202,25 @@ namespace WenSocketTcpServer
                             treeViewClientList.Nodes[0].Nodes.Add(tn);
 
                             //treeview节点和IPEndPoint绑定
-                            DicTreeIPEndPoint.Add(tn,sks.Ip);
+                            DicTreeIPEndPoint.Add(tn, sks.Ip);
 
                             if (treeViewClientList.Nodes[0].Nodes.Count > 0)
                             {
                                 treeViewClientList.ExpandAll();
                             }
-                            toolStripStatusLabelClientNum.Text = (int.Parse(toolStripStatusLabelClientNum.Text)+1).ToString();
+                            toolStripStatusLabelClientNum.Text = (int.Parse(toolStripStatusLabelClientNum.Text) + 1).ToString();
                         }
                         else if (sks.Offset == 0)
                         {
-                            listBoxServerInfo.Items.Insert(0,string.Format("{0}客户端:{1}下线.!",DateTime.Now.ToString(), sks.Ip));
+                            LogHelper.log.Info(string.Format("{0}客户端:{1}下线.!", DateTime.Now.ToString(), sks.Ip));
+                            listBoxServerInfo.Items.Insert(0, string.Format("{0}客户端:{1}下线.!", DateTime.Now.ToString(), sks.Ip));
                             if (treeViewClientList.Nodes[0].Nodes.ContainsKey(sks.Ip.ToString()))
                             {
                                 if (DicTreeIPEndPoint.Count != 0)
                                 {
                                     removTreeIPEndPoint(sks.Ip);
                                     treeViewClientList.Nodes[0].Nodes.RemoveByKey(sks.Ip.ToString());
-
                                     toolStripStatusLabelClientNum.Text = (int.Parse(toolStripStatusLabelClientNum.Text) - 1).ToString();
-                            
                                 }
                             }
                         }
@@ -218,11 +229,16 @@ namespace WenSocketTcpServer
                             byte[] buffer = new byte[sks.Offset];
                             Array.Copy(sks.RecBuffer, buffer, sks.Offset);
                             string str = Encoding.ASCII.GetString(buffer);
+
+                            LogHelper.log.Info(string.Format("{0}客户端 {1} 发来消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
+                            listBox1.Items.Insert(0, string.Format("{0} 客户端 {1} 发来消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
+
                             //将接收到客户端的数据重新发送给客户端
                             //string SendStr = "TCPServers at [" + DateTime.Now.ToString("yyy-MM-dd HH:mm:ss") + "] Received your Data:" + str;
                             tcpServer.SendToClient(sks.Ip, str);
+                            LogHelper.log.Info(string.Format("{0} 回复给 {1} 客户端消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
+                            listBox1.Items.Insert(0, string.Format("{0} 回复给 {1} 客户端消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
 
-                            listBox1.Items.Insert(0,string.Format("{0}客户端 {1} 发来消息：{2}",DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
                         }
                     }
                 }
@@ -250,7 +266,7 @@ namespace WenSocketTcpServer
             if (e.Button == MouseButtons.Right)
             {
                 treeViewClientList.Focus();
-                treeViewClientList.SelectedNode = treeViewClientList.GetNodeAt(e.X,e.Y);
+                treeViewClientList.SelectedNode = treeViewClientList.GetNodeAt(e.X, e.Y);
             }
 
         }
@@ -261,6 +277,7 @@ namespace WenSocketTcpServer
             if (treeViewClientList.SelectedNode != null)
             {
                 tcpServer.SendToClient(DicTreeIPEndPoint[treeViewClientList.SelectedNode], string.Format("A{0}", sendInt.ToString()));
+                LogHelper.log.Info(string.Format("发送给 {0} 客户端的内容：A{1}", DicTreeIPEndPoint[treeViewClientList.SelectedNode],sendInt.ToString()));
                 sendInt++;
             }
         }
@@ -277,7 +294,7 @@ namespace WenSocketTcpServer
             if (DicTreeIPEndPoint.Count <= 0) return;
             //foreach遍历Dictionary时候不能对字典进行Remove
             TreeNode[] keys = new TreeNode[DicTreeIPEndPoint.Count];
-            DicTreeIPEndPoint.Keys.CopyTo(keys,0);
+            DicTreeIPEndPoint.Keys.CopyTo(keys, 0);
             lock (obj)
             {
                 foreach (TreeNode item in keys)
