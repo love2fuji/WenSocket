@@ -152,8 +152,8 @@ namespace WenSocket
                     //链接成功后主动向客户端发送一条消息
                     if(stream.CanWrite)
                     {
-                        byte[] buffer = Encoding.ASCII.GetBytes(this.InitMsg);
-                        stream.Write(buffer, 0, buffer.Length);
+                        //byte[] buffer = Encoding.ASCII.GetBytes(this.InitMsg);
+                        //stream.Write(buffer, 0, buffer.Length);
                     }
                     semap.Release();
                 }
