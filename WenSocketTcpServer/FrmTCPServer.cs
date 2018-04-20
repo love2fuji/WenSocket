@@ -147,7 +147,6 @@ namespace WenSocketTcpServer
             WenTcpServer.pushSockets = new PushSockets(Rev);
             tcpServer = new WenTcpServer();
             StopServerToolStripMenuItem.Enabled = false;
-
         }
 
         /// <summary>
@@ -180,7 +179,6 @@ namespace WenSocketTcpServer
                                     toolStripStatusLabelClientNum.Text = (int.Parse(toolStripStatusLabelClientNum.Text) - 1).ToString();//treeViewClientList.Nodes[0].Nodes.Count.ToString();
 
                                 }
-
                             }
                         }
                         listBoxServerInfo.Items.Insert(0, sks.ex.Message);
@@ -238,7 +236,6 @@ namespace WenSocketTcpServer
                             tcpServer.SendToClient(sks.Ip, str);
                             LogHelper.log.Info(string.Format("{0} 回复给 {1} 客户端消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
                             listBox1.Items.Insert(0, string.Format("{0} 回复给 {1} 客户端消息：{2}", DateTime.Now.ToString("yyy-MM-dd HH:mm:ss"), sks.Ip, str));
-
                         }
                     }
                 }
